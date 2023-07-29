@@ -1,10 +1,5 @@
 import { useState } from "react";
-
-type FormType = {
-  [key: string]: string;
-  id: string;
-  password: string;
-};
+import { FormType } from "../type";
 
 const useSignIn = () => {
   const [value, setValue] = useState<FormType>({
