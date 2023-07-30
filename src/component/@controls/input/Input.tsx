@@ -9,20 +9,24 @@ import {
   forwardRef,
 } from "react";
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
+export type StatusType = "success" | "warning" | "error";
+
+export interface InputProps extends HTMLAttributes<HTMLDivElement> {
   label?: ReactNode;
   children: ReactElement;
   desc?: string;
+  status?: StatusType;
 }
 
-const Item = ({ label, children, desc, ...rest }: Props) => {
+const Input = ({ label, children, desc, ...rest }: InputProps) => {
   const child = Children.only(children);
   const id = child.props.id;
   return (
     <div {...rest}>
-      <label htmlFor={id}>{label}s</label>
+      <label htmlFor={id}>{label}</label>
       {cloneElement(child, {
         id,
+        name: label,
         ...child.props,
       })}
       {desc && <span>{desc}</span>}
@@ -33,16 +37,10 @@ const Item = ({ label, children, desc, ...rest }: Props) => {
 interface TextFieldProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {}
 
-const TextField = forwardRef(
+Input.TextField = forwardRef(
   (props: TextFieldProps, ref: ForwardedRef<HTMLInputElement>) => {
     return <input ref={ref} {...props} />;
   }
 );
 
-export const Input = Object.assign(
-  {},
-  {
-    Item,
-    TextField,
-  }
-);
+export default Input;
