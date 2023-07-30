@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import Input, { StatusType } from "../../../../component/@controls/input/Input";
 import { Button } from "../../../../component/@controls/button/Button";
-import { FormContextType, FormContext } from "../../index";
+import { FormContext, FormContextType } from "../organism/Form";
 
 /* 
 🤔 공용으로 쓰는 FormItem 이 무조건 좋은 것인가에 대한 고민
