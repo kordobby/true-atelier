@@ -1,15 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import "./App.css";
-import { FORM } from "./route/constant";
+import { DYNAMIC_INPUT } from "./route/constant";
 import "./index.css";
+import { Button } from "./component/@controls/button/Button";
 
 function App() {
   const navigate = useNavigate();
   return (
     <>
-      <button className="button" onClick={() => navigate(FORM)}>
-        FORM
-      </button>
+      <Button onClick={() => navigate(DYNAMIC_INPUT)}>DYNAMIC INPUT</Button>
     </>
   );
 }
