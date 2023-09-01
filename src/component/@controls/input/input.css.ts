@@ -46,9 +46,6 @@ const inputTag = style({
   border: "none",
   background: "transparent",
   outline: "none",
-  width: "fit-content",
-  minWidth: 0,
-  maxWidth: "fit-content",
   // caretColor: "transparent",
   // color: "transparent",
 });
