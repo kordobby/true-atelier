@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Input, { StatusType } from "../../../../component/@controls/input/Input";
 import { Button } from "../../../../component/@controls/button/Button";
 import { FormContext, FormContextType } from "../organism/Form";
-
+import { FaUserAstronaut } from "react-icons/fa";
 /* 
 🤔 공용으로 쓰는 FormItem 이 무조건 좋은 것인가에 대한 고민
 const FormItem = ({ id, ...rest }: FormItemProps) => {
@@ -20,13 +20,10 @@ const FormItem = ({ id, ...rest }: FormItemProps) => {
  */
 
 const Id = () => {
-  const {
-    value: { id },
-    handleValue,
-  } = useContext<FormContextType>(FormContext);
+  const { handleValue } = useContext<FormContextType>(FormContext);
 
   // 공통된 validation 은 어떻게 빼는게 효율적일까.
-  const validate = (text: string): [StatusType, string[]] => {
+  const validate = (): [StatusType, string[]] => {
     let error: string[] = [];
 
     const status: StatusType = error.length === 0 ? "error" : "success";
@@ -36,14 +33,14 @@ const Id = () => {
   const onChangeHandler = (text: string) => {
     const value = {
       value: text,
-      status: validate(text)[0],
-      error: validate(text)[1],
+      status: validate()[0],
+      error: validate()[1],
     };
     handleValue(value, "password");
   };
 
   return (
-    <Input label="아이디" desc="아이디를 입력해주세요.">
+    <Input desc="아이디를 입력해주세요." iconLabel={<FaUserAstronaut />}>
       <Input.TextField
         id="id"
         type="text"
@@ -84,7 +81,7 @@ const Password = () => {
 
   // @TODO : state error case
   return (
-    <Input status={password.status} label="비밀번호" desc={password.error?.[0]}>
+    <Input status={password.status} desc={password.error?.[0]}>
       <Input.TextField
         id="password"
         type="text"
@@ -95,7 +92,11 @@ const Password = () => {
 };
 
 const Submit = () => {
-  return <Button type="submit">제출하기</Button>;
+  return (
+    <Button className="button" type="submit">
+      제출하기
+    </Button>
+  );
 };
 
 export const FormItem = Object.assign(
