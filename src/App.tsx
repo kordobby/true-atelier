@@ -1,11 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import './App.css';
-import { FORM } from './route/constant';
-import './index.css';
+import { Selector } from './component/@controls/selector/Selector';
+import { layoutStyled } from './component/@gnb/layout.css';
 
 function App() {
-  const navigate = useNavigate();
-  return <></>;
+  return (
+    <div className={layoutStyled}>
+      <Selector />
+    </div>
+  );
 }
 
 export default App;

@@ -1,23 +1,17 @@
-import { style } from "@vanilla-extract/css";
+import { style } from '@vanilla-extract/css';
 
 export const buttonStyle = style({
-  borderRadius: "10px",
-  border: `1px solid transparent`,
-  fontSize: "1em",
-  fontWeight: 600,
-  backdropFilter: "blur(10px)",
-  padding: `0.5em 1.2em`,
-  height: "48px",
-  width: "100%",
-  backgroundColor: "#FFD336",
-  cursor: "pointer",
-  ":hover": {
-    borderColor: "white",
-  },
-  ":focus": {
-    outline: "none",
-  },
-  ":focus-visible": {
-    outline: "none",
-  },
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  height: '32px',
+  padding: '0 10px',
+  border: '1px solid #dde1e8',
+  borderRadius: '3px',
+  textAlign: 'left',
+  boxShadow:
+    '0 0 1px rgba(67, 90, 111, 0.03), 0 2px 2px -2px rgba(67, 90, 111, 0.2)',
+  background: 'white',
+  color: '#575a5e',
+  fontSize: '12px',
 });
