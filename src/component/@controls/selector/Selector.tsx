@@ -1,12 +1,22 @@
+import styled from 'styled-components';
 import { Button } from '../button/Button';
 import { Menu } from '../menu/Menu';
 import { MenuItem } from '../menu/MenuItem';
 
-export function Selector() {
+type Props = {
+  list: string[];
+  placeholder: string;
+  selected: string[];
+  onSubmit(arg: string[]): void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+export function Selector(props: Props) {
+  const { list, placeholder, selected, onSubmit, onChange } = props;
   return (
-    <div>
+    <SelectorLayout>
       <Button>선택</Button>
-      <Menu>
+      <MenuBox>
         <ul>
           <li>
             <MenuItem checked={true}>..</MenuItem>
@@ -15,7 +25,21 @@ export function Selector() {
             <MenuItem checked={true}>..</MenuItem>
           </li>
         </ul>
-      </Menu>
-    </div>
+      </MenuBox>
+    </SelectorLayout>
   );
 }
+
+const SelectorLayout = styled.div`
+  position: relative;
+`;
+
+const MenuBox = styled(Menu)`
+  position: absolute;
+  top: 34px;
+
+  ul {
+    list-style: 'none';
+    padding-left: 0;
+  }
+`;
