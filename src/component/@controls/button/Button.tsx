@@ -6,9 +6,9 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, Props>(
-  ({ children }, ref) => {
+  ({ children, ...rest }, ref) => {
     return (
-      <button className={buttonStyle} ref={ref}>
+      <button className={buttonStyle} ref={ref} {...rest}>
         {children}
       </button>
     );

@@ -3,27 +3,57 @@ import { Selector } from './component/@controls/selector/Selector';
 import { layoutStyled } from './component/@gnb/layout.css';
 
 const data = ['Hello', 'Bye', 'How Are You', 'Im Fine'];
+const compareCaseInsensitiveWord = (ref: string, com: string): boolean => {
+  return ref.toLowerCase().includes(com.toLowerCase());
+};
 
 function App() {
-  const [selectedList, setSelectedList] = useState<string[]>([]);
+  const list = new Set(data);
+  const [selectedList, setSelectedList] = useState<Map<string, string>>(
+    new Map()
+  );
+  const [menuList, setMenuList] = useState<Set<string>>(list);
 
-  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('User Wrote something...', e.target.value);
-  }, []);
+  const onChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const keyword = e.target.value;
+      const selectedValues = Array.from(selectedList.keys());
+      const searchList = new Set([...list, ...selectedValues]);
 
-  const onSubmit = useCallback((list: string[]) => {
-    setSelectedList(list);
+      if (keyword.trim() === '') {
+        setMenuList(new Set([...list, ...selectedValues]));
+        return;
+      }
+
+      const filteredResult = new Set(
+        [...searchList].filter((value) =>
+          compareCaseInsensitiveWord(value, keyword)
+        )
+      );
+
+      const isEmptyList = filteredResult.has(keyword);
+      if (!isEmptyList) {
+        setMenuList(new Set([...filteredResult, keyword]));
+        return;
+      }
+
+      setMenuList(filteredResult);
+    },
+    [selectedList, menuList]
+  );
+
+  const onSubmit = useCallback((value: Map<string, string>) => {
+    const selectedValues = Array.from(value.keys());
+    setSelectedList(value);
+    setMenuList(new Set([...list, ...selectedValues]));
   }, []);
 
   return (
     <div className={layoutStyled}>
-      <Selector
-        list={data}
-        placeholder="선택해주세요."
-        selected={selectedList}
-        onChange={onChange}
-        onSubmit={onSubmit}
-      />
+      <Selector onSubmit={onSubmit} selected={selectedList}>
+        <Selector.Trigger>선택</Selector.Trigger>
+        <Selector.MenuList list={menuList} onChange={onChange} />
+      </Selector>
     </div>
   );
 }
