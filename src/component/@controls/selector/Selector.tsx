@@ -32,45 +32,43 @@ function useSelectorContext() {
   return context;
 }
 
-export function Selector(props: Props) {
+export function Selector({ selected, onSubmit, children }: Props) {
   const refMenu = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
-  const [draftList, setDraftList] = useState<Map<string, string>>(
-    props.selected
-  );
+  const [draftList, setDraftList] = useState<Map<string, string>>(selected);
+
   useEffect(() => {
     const handleClickOuter = (event: MouseEvent) => {
       if (
         refMenu.current &&
         !refMenu.current.contains(event.target as Node | null)
       ) {
-        props.onSubmit(draftList);
+        onSubmit(draftList);
         setOpen(false);
       }
     };
     window.addEventListener('mousedown', handleClickOuter);
 
     return () => window.removeEventListener('mousedown', handleClickOuter);
-  }, [props.onSubmit, draftList]);
+  }, [onSubmit, draftList]);
 
   return (
     <SelectorContext.Provider
       value={{ open, setOpen, draftList, setDraftList }}>
       <SelectorLayout ref={refMenu}>
-        <>{props.children}</>
+        <>{children}</>
       </SelectorLayout>
     </SelectorContext.Provider>
   );
 }
 
-function Trigger(props: PropsWithChildren) {
+function Trigger({ children }: PropsWithChildren) {
   const { setOpen, draftList } = useSelectorContext();
   const isEmptyList = draftList.size === 0;
   const selectedValues = Array.from(draftList.keys());
 
-  const placeholder = isEmptyList
-    ? props.children
-    : [...selectedValues].join(', ');
+  const placeholder = isEmptyList ? children : [...selectedValues].join(', ');
+
   return (
     <Button onClick={() => setOpen((prev) => !prev)}>{placeholder}</Button>
   );
@@ -83,11 +81,12 @@ interface MenuListProps {
 
 function MenuList({ list, onChange }: MenuListProps) {
   const { open, draftList, setDraftList } = useSelectorContext();
-  const renderList = new Set([...list]);
+
   const handleSelectMenu = (value: string, isFreeForm: boolean) => {
     const content = isFreeForm ? 'freeForm' : 'original';
+    const isSelected = draftList.get(value);
 
-    if (draftList.get(value)) {
+    if (isSelected) {
       setDraftList((prev) => {
         const deletedList = new Map(prev);
         deletedList.delete(value);
@@ -101,20 +100,28 @@ function MenuList({ list, onChange }: MenuListProps) {
   if (!open) return null;
   return (
     <MenuBox>
-      <div className="inputBox">
-        <Input placeholder={'검색어를 입력해주세요.'} onChange={onChange} />
-      </div>
+      {onChange && (
+        <div className="inputBox">
+          <Input placeholder={'검색어를 입력해주세요.'} onChange={onChange} />
+        </div>
+      )}
       <ul>
-        {[...renderList].map((value, index) => (
-          <li
-            key={index}
-            onClick={() => handleSelectMenu(value, !new Set(list).has(value))}>
-            <MenuItem checked={Boolean(draftList.get(value))}>
-              <span>{value}</span>
-              {draftList.get(value) === 'FreeForm' && <span>(FreeForm)</span>}
-            </MenuItem>
-          </li>
-        ))}
+        {[...list].map((value, index) => {
+          const selectedValue = draftList.get(value);
+          const isFreeForm = selectedValue === 'FreeForm';
+          return (
+            <li
+              key={index}
+              onClick={() =>
+                handleSelectMenu(value, !new Set(list).has(value))
+              }>
+              <MenuItem checked={Boolean(selectedValue)}>
+                <span>{value}</span>
+                {isFreeForm && <span>(FreeForm)</span>}
+              </MenuItem>
+            </li>
+          );
+        })}
       </ul>
     </MenuBox>
   );
