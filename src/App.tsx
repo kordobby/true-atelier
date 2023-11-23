@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Selector } from './component/@controls/selector/Selector';
 import { layoutStyled } from './component/@gnb/layout.css';
-
+import { debounce } from 'lodash';
 const data = ['Hello', 'Bye', 'How Are You', 'Im Fine'];
 const compareCaseInsensitiveWord = (ref: string, com: string): boolean => {
   return ref.toLowerCase().includes(com.toLowerCase());
@@ -15,7 +15,7 @@ function App() {
   const [menuList, setMenuList] = useState<Set<string>>(list);
 
   const onChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    debounce((e: React.ChangeEvent<HTMLInputElement>) => {
       const keyword = e.target.value;
       const selectedValues = Array.from(selectedList.keys());
       const searchList = new Set([...list, ...selectedValues]);
@@ -38,7 +38,7 @@ function App() {
       }
 
       setMenuList(filteredResult);
-    },
+    }, 500),
     [selectedList, menuList]
   );
 
